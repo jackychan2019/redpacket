@@ -1,0 +1,111 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs" id="myTab">
+	<li class="active"><a href="#tab_basic">基本设置</a></li>
+</ul>
+<div class="app-content">
+	<div class="app-form">
+        <form action="" method="post" class="form-horizontal" id="setting-form">
+            <div class="panel panel-default">
+                <div class="panel-heading">基本设置</div>
+                <div class="panel-body">
+                    <div class="tab-content">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">单人每日砍价次数</label>
+                            <div class="col-sm-7">
+                                <div class="input-group">
+                                    <input type="text" name="set[syslimit]" class="form-control" value="{$set['syslimit']}">
+                                    <span class="input-group-addon">次/天</span>
+                                </div>
+                                <span class="help-block">单人每日可砍价次数，包括帮砍和自己发起的初次砍价,不填或填0则不限制次数。</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">是否开启独立结算(默认)</label>
+                            <div class="col-sm-9">
+                                <label class="radio-inline">
+                                    <input type="radio" value="0" name="set[settlement]" {if $set['settlement']==0||!$base['settlement']} checked {/if}> 关闭
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" value="1" name="set[settlement]" {if $set['settlement']==1} checked {/if}> 开启
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">搜索框</label>
+                            <div class="col-sm-9">
+                                <label class="radio-inline">
+                                    <input type="radio" value="0" name="set[search]" {if $set['search']==0||!$set['search']} checked {/if}>启用
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" value="1" name="set[search]" {if $set['search']==1} checked {/if}>禁用
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group search_float" {if $set['search'] == 1}style="display:none;"{/if}>
+                            <label class="col-sm-2 control-label">搜索框是否浮动</label>
+                            <div class="col-sm-9">
+                                <label class="radio-inline">
+                                    <input type="radio" value="0" name="set[search_float]" {if $set['search_float']==0||!$set['search_float']} checked {/if}> 浮动
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" value="1" name="set[search_float]" {if $set['search_float']==1} checked {/if}> 固定
+                                </label>
+                                <span class="help-block">设置为浮动时，会覆盖一部分内容。设为固定则不会覆盖内容</span>
+                            </div>
+                        </div>
+                        <div class="form-group search_bgColor" {if $set['search'] == 1 || $set['search_float'] != 1}style="display:none;"{/if}>
+                            <label class="col-sm-2 control-label">搜索框背景颜色</label>
+                            <div class="col-sm-9">
+                                <div class="input-group">
+                                    <input type="color" value="{if $set['search_bgColor']}{$set['search_bgColor']}{else}#000000{/if}" name="set[search_bgColor]" class="form-control" style="width: 120px;padding: 0px 3px;">
+                                </div>
+                                <span class="help-block">当搜索框设为固定是请设置背景颜色，否则默认为黑色背景</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label"></label>
+                <div class="col-sm-9">
+                    <input type="submit" name="submit" value="提交" class="btn btn-primary min-width" />
+                    <input type="hidden" name="token" value="{$_W['token']}" />
+                </div>
+            </div>
+        </form>
+	</div>
+</div>
+<script>
+	$(function() {
+		window.optionchanged = false;
+		$('#myTab a').click(function(e) {
+			e.preventDefault(); //阻止a链接的跳转行为
+			$(this).tab('show'); //显示当前选中的链接及关联的content
+		})
+	});
+    //监听搜索框是否启用
+    $("[name='set[search]']").change(function () {
+        var val = $(this).val();
+        if(val == 1){
+            $(".form-group.search_float").hide();
+            $(".form-group.search_bgColor").hide();
+        }else{
+            $(".form-group.search_float").show();
+            if($("[name='set[search_float]']:checked").val() == 1){
+                $(".form-group.search_bgColor").show();
+            }else{
+                $(".form-group.search_bgColor").hide();
+            }
+        }
+    });
+    //监听搜索框是否浮动
+    $("[name='set[search_float]']").change(function () {
+        var val = $(this).val();
+        if(val == 1){
+            $(".form-group.search_bgColor").show();
+        }else{
+            $(".form-group.search_bgColor").hide();
+        }
+    });
+</script>
+{php include wl_template('common/footer');}

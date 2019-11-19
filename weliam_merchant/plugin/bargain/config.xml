@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest>
+	<application>
+		<name><![CDATA[砍价活动]]></name>
+		<identifie><![CDATA[bargain]]></identifie>
+		<version><![CDATA[1.0.0]]></version>
+		<type><![CDATA[market]]></type>
+		<description><![CDATA[砍价是一款邀请好友协助为商品砍价的营销活动]]></description>
+		<author><![CDATA[微连科技]]></author>
+		<url><![CDATA[http://www.weliam.cn/]]></url>
+	</application>
+	<setting>
+		<agent embed="true" />
+		<system embed="true" />
+		<task embed="true" />
+	</setting>
+	<agentmenu>
+		<menu title="活动管理" font="fa-inbox">
+			<entry title="活动列表" ac="bargain_web" do="activitylist" iscover="true" />
+			<entry title="添加砍价" ac="bargain_web" do="createbargain" actions='["ac","bargain_web","do","createbargain"]' />
+		</menu>
+		<menu title="记录管理" font="fa-inbox">
+			<entry title="砍价列表" ac="bargain_web" do="userlist"/>
+			<!--<entry title="订单列表" ac="bargain_web" do="orderlist"/>-->
+			<entry title="砍价记录" ac="bargain_web" do="bargainrecord"/>
+		</menu>
+		<menu title="分类管理" font="fa-inbox">
+			<entry title="分类列表" ac="bargain_web" do="categorylist"/>
+		</menu>
+		<menu title="活动设置" font="fa-inbox">
+            <entry title="基本设置" ac="bargain_web" do="setting" />
+			<entry title="首页入口" ac="bargain_web" do="entry" />
+		</menu>
+	</agentmenu>
+	<systemmenu>
+		<menu title="活动管理" font="fa-inbox">
+			<entry title="活动列表" ac="bargain_web" do="activitylist" iscover="true" />
+			<entry title="添加砍价" ac="bargain_web" do="createbargain" actions='["ac","bargain_web","do","createbargain"]' />
+		</menu>
+		<menu title="记录管理" font="fa-inbox">
+			<entry title="砍价列表" ac="bargain_web" do="userlist"/>
+			<!--<entry title="订单列表" ac="bargain_web" do="orderlist"/>-->
+			<entry title="砍价记录" ac="bargain_web" do="bargainrecord"/>
+		</menu>
+		<menu title="分类管理" font="fa-inbox">
+			<entry title="分类列表" ac="bargain_web" do="categorylist"/>
+		</menu>
+		<menu title="活动设置" font="fa-inbox">
+			<entry title="首页入口" ac="bargain_web" do="entry" />
+		</menu>
+	</systemmenu>
+</manifest>

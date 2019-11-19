@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest>
+	<application>
+		<name><![CDATA[投票]]></name>
+		<identifie><![CDATA[vote]]></identifie>
+		<version><![CDATA[1.0.0]]></version>
+		<type><![CDATA[market]]></type>
+		<description><![CDATA[投票]]>投票系统，投票后营销大转盘-预计11月30号上线</description>
+		<author><![CDATA[微蚁CMS]]></author>
+		<url><![CDATA[http://www.vipshw.cn/]]></url>
+	</application>
+	<setting>
+		<agent embed="true" />
+		<system embed="true" />
+		<task embed="true" />
+	</setting>
+	<agentmenu>
+	</agentmenu>
+	<systemmenu>
+		<menu title="投票" font="fa-inbox">
+			<entry title="投票" ac="voteset" do="relation" iscover="true" />
+			<entry title="投票设置" ac="voteset" do="setting" />
+		</menu>
+		<menu title="入口" font="fa-inbox">
+			<entry title="投票" ac="wxappset" do="applink" />
+		</menu>
+	</systemmenu>
+</manifest>

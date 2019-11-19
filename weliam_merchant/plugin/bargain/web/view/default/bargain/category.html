@@ -1,0 +1,176 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs">
+	<li class="active"><a href="{php echo web_url('bargain/bargain_web/index');}">分类管理</a></li>
+</ul>
+<div class="app-content">
+	<div class="app-filter">
+		<div class="filter-action">
+			<span class="btn btn-primary addCate"><i class="fa fa-plus"></i> 新建分类</span>
+		</div>
+		<div class="filter-list">
+			<form action="./agent.php" method="get">
+				<input type="hidden" name="p" value="bargain" />
+				<input type="hidden" name="ac" value="bargain_web" />
+				<input type="hidden" name="do" value="categorylist" />
+				<div class="form-group">
+					<label class="col-sm-2 control-label">分类筛选</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" name="keyword" value="{$_GPC['keyword']}" placeholder="请输入关键字进行搜索">
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label"></label>
+					<div class="col-sm-9">
+	                    <button class="btn btn-primary" type="submit">搜索</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div class="app-table-list">
+		<div class="table-responsive">
+			<table class="table table-hover table-bordered">
+				<thead class="navbar-inner">
+				<tr>
+					<th style="width: 50px;">ID</th>
+					<th style="width: 40px;">图片</th>
+					<th style="width: 150px;">分类名称(点击编辑)</th>
+					<th style="width: 40px;">排序</th>
+					<th style="width: 120px">操作</th>
+				</tr>
+				</thead>
+				<tbody>
+				{loop $list $item}
+				<tr>
+					<td>{$item['id']}</td>
+					<td style="text-align: center;"><img style="width: 40px;height: 40px;" src = "{php echo tomedia($item['thumb'])}" ></td>
+					<td>
+						<a href='javascript:;' data-toggle='ajaxEdit' data-href="{php echo web_url('bargain/bargain_web/edit',array('id'=>$item['id'],'type'=>1))}">
+							{$item['name']}
+						</a>
+					</td>
+					<td>
+						<a href='javascript:;' data-toggle='ajaxEdit' data-href="{php echo web_url('bargain/bargain_web/edit',array('id'=>$item['id'],'type'=>2))}">
+							{$item['sort']}
+						</a>
+					</td>
+					<td style="position: relative;">
+						<!--<a class="btn btn-sm btn-primary js-clip" href='javascript:;' data-url="{php echo app_url('bargain/bargain_app/bargainlist', array('cateid' => $item['id']))}">复制链接</a>-->
+						<a class="btn btn-sm btn-warning addCate" cateid = "{$item['id']}" catename = "{$item['name']}" catet = "{$item['thumb']}" catethumb = "{php echo tomedia($item['thumb'])}" catesort = "{$item['sort']}" href='javascript:;'>编辑</a>
+						<a class="btn btn-sm btn-danger" data-toggle="ajaxRemove" href="{php echo web_url('bargain/bargain_web/delete', array('id'=>$item['id']))}" data-confirm="删除后该分类下砍价活动将转入未分类，确定要删除该分类吗？">删除</a>
+					</td>
+				</tr>
+				{/loop}
+				</tbody>
+			</table>
+		</div>
+		<div class="app-table-foot clearfix">
+			<div class="pull-left">
+				
+			</div>
+			<div class="pull-right">
+				{$pager}
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" style="z-index: 2049;" id="addCateModal" aria-hidden="false">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button data-dismiss="modal" class="close" type="button">×</button>
+					<h4 class="modal-title">新建分类</h4>
+				</div>
+				<div class="modal-body form-horizontal">
+					<div class="form-group">
+						<div class="col-sm-2 control-label must">分类图片</div>
+						<div class="col-sm-9">
+							<div class="input-group img-item">
+								<div class="input-group-addon">
+									<img src="" id="cateimg" style="height:20px;width:20px" />
+								</div>
+								<input type="text" class="form-control" name="tcimg"  id="saveimg" value=""/>
+								<div class="input-group-btn">
+									<button type="button" class="btn btn-default btn-select-pic">选择图片</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label">分类名称</div>
+						<div class="col-sm-9">
+							<input class="form-control" placeholder="请输入分类名称" id="saveTempName" value="未命名分类" />
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-2 control-label must">分类排序</div>
+						<div class="col-sm-9">
+							<input class="form-control" placeholder="请输入分类排序" id="savesort" value="0" />
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<div class="btn btn-primary" id="saveCate">保存</div>
+					<input type="hidden" value="0" id="cateid">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+    $(".addCate").unbind('click').click(function () {
+        $("#addCateModal").modal();
+        if($(this).attr('cateid')){
+        	$('#cateid').val($(this).attr('cateid'));
+        	$('#cateimg').attr('src',$(this).attr('catethumb'));
+        	$('#savesort').val($(this).attr('catesort'));
+        	$('#saveimg').val($(this).attr('catet'));
+        	$('#saveTempName').val($(this).attr('catename'));
+        }
+        
+        $("#saveCate").unbind('click').click(function () {
+            var status = $(this).data('status');
+            if(status) {
+                tip.msgbox.err("正在保存，请稍候。");
+                return;
+            }
+            var name = $.trim($("#saveTempName").val());
+            var thumb = $.trim($("#saveimg").val());
+            var sort = $.trim($("#savesort").val());
+            var id = $.trim($("#cateid").val());
+            if(!name) {
+                tip.msgbox.err("请填写分类名称！");
+                $("#saveTempName").focus();
+                return;
+            }
+            $(this).data('status',1).text('保存中')
+            $.post("{php echo web_url('bargain/bargain_web/addcate')}", {
+                name: name,
+                thumb:thumb,
+                sort:sort,
+                id:id
+            }, function (ret) {
+                if(ret.status==0){
+                    tip.msgbox.err(ret.result.message);
+                }else{
+                    tip.msgbox.suc("保存成功！");
+                }
+                $("#addCateModal .close").trigger('click');
+                setTimeout(function () {
+                    location.reload();
+                }, 500);
+            }, 'json');
+        });
+    });
+    
+    require(['jquery', 'util'], function ($, util) {
+		$('.btn-select-pic').unbind('click').click(function () {
+			var imgitem = $(this).closest('.img-item');
+			util.image('', function (data) {
+				imgitem.find('img').attr('src', data['url']);
+				imgitem.find('input').val(data['attachment']);
+			});
+		});
+	});
+    
+</script>
+{php include wl_template('common/footer');}

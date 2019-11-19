@@ -1,0 +1,322 @@
+{php include wl_template('common/header');}
+<div class="page-group">
+	<div class="page page-current">
+		{php include wl_template('common/menu');}
+		{if !empty($advdata)}
+			{php include wl_template('diypage/advdata');}
+		{/if}
+    	<!--幻灯片-->
+		<div class="banner" id="ban_adv">
+            {if !$set['search'] || $set['search'] == 0}{php include wl_template('dashboard/search');}{/if}
+		    <div class="swiper-wrapper">
+			{loop $advs $adv}
+				<div class="swiper-slide"><a href="{$adv['link']}"><img src="{php echo tomedia($adv['thumb'])}"></a></div>
+			{/loop}
+		    </div>
+		    <div class="swiper-pagination"></div>
+		</div>
+		<style>
+			.banner{visibility: visible;width: 100%;position: relative;overflow: hidden;}
+			.banner img{width: 100%;}
+			#app .bargain {display: none;}
+			#app .bargainShow {display: block;}
+		</style>
+		<script>
+		    $(function() {
+		        var mySwiper = new Swiper ('#ban_adv', {
+		            autoplay:3000,
+		            speed:500,
+		            loop:true,
+		            pagination: '.swiper-pagination',
+					paginationClickable: true,
+		            autoplayDisableOnInteraction:false
+		        });
+		    });
+		</script>
+		<div id="app">
+			<div class="bargain" :class="{bargainShow: loadInit}">
+			    <div data-offset="44" class="buttons-tab">
+			    	<a href="#tab1" class="tab-link button" :class="{active: liststatus == 1}" @click="getnav(1)">进行中</a>
+			    	<a href="#tab1" class="tab-link button" :class="{active: liststatus == 2}" @click="getnav(2)">往期</a>
+			    </div>
+			    <div class="bargain-list">
+			    	<div class="sc-loading" v-if="loadingtag"><i><img src="{URL_MODULE}plugin/activity/app/resource/images/loading.gif"></i><span>&nbsp;加载中</span></div>
+			    	<div class="bargain-list-i" v-for="(item, key) in basic" :key="key">
+			    		<a :href="getDtlUrl(item.id)">
+				    		<div class="bargain-list-i-t" :style="'background-image: url('+item.thumb+')'">
+				    		</div>
+			    		</a>
+			    		<div class="bargain-list-i-c">
+			    			<div class="bargain-list-i-c-t1">
+			    				{{ item.name }}
+			    			</div>
+			    			<div class="bargain-list-i-c-t2">
+			    				<div class="bargain-list-i-c-t2-l">
+			    					<h1>底价:&nbsp;{{ item.price }}元<em>原价:&nbsp;{{ item.oldprice }}元</em></h1>
+			    					<p>{{ item.pv }}人关注</p>
+			    				</div>
+			    				<div class="bargain-list-i-c-t2-r">
+			    					<a :href="getDtlUrl(item.id)">立即参与</a>
+			    				</div>
+			    			</div>
+			    		</div>
+			    	</div>
+			    </div>
+			    <div class="sc-loading" v-if="loading"><i><img src="{URL_MODULE}plugin/activity/app/resource/images/loading.gif"></i><span>&nbsp;加载中</span></div>
+			    <div class="bargain-ft" v-if="loadOver">
+			    	—&nbsp;没有更多了&nbsp;—
+			    </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+var app = new Vue({
+	el: '#app',
+	data: {
+		loadInit: true,
+		basic: [],
+		liststatus: 1,
+		page: 1,
+		loading: false,
+        loadOver: false,
+        loadingtag: false,
+	},
+
+	/*
+	liststatus 1 进行中 2往期 page 页码
+	*/
+	created: function () {
+        this.$http.get(common.createUrl('bargain/bargain_app/bargainlistAPI',{'liststatus':this.liststatus,'page':this.page})).then(function(response){
+        	var that = this
+        	that.basic = response.data.data
+			that.loadInit = true
+        	console.log(that.basic)
+
+
+        })
+        window.addEventListener('scroll', this.loadingMore);
+    },
+    methods: {
+    	getDtlUrl: function (cid) {
+            return common.createUrl('bargain/bargain_app/bargaindetail',{'cid':cid,userid:''})
+        },
+	   	loadingMore: function () {
+	   		var sclTop = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop;
+            var clientHeight = document.body.clientHeight
+            if(!this.loading && (sclTop + clientHeight >= document.documentElement.scrollHeight)) {
+            	if (!this.loadOver) {
+                    this.loading = true
+                }
+            	this.page++
+            	this.$http.get(common.createUrl('bargain/bargain_app/bargainlistAPI',{'liststatus':this.liststatus,'page':this.page})).then(function(response){
+		        	var basicMore = response.data.data
+		        	if(basicMore.length ==0 ){
+                        this.loadOver = true
+                    }
+                    for (var i=0; i<basicMore.length; i++) {
+                        this.basic.push(basicMore[i])
+                    }
+                    this.loading = false
+		        })
+            }
+	   	},
+	   	getnav: function (liststatus) {
+	   		this.liststatus = liststatus
+	   		this.page = 1
+	   		this.loadOver = false
+	   		this.loadingtag = true
+	   		this.$http.get(common.createUrl('bargain/bargain_app/bargainlistAPI',{'liststatus':this.liststatus,'page':this.page})).then(function(response){
+	        	this.basic = response.data.data
+                this.loadingtag = false
+                if(this.basic == null || this.basic == 'undefined'){
+                	this.loadOver = true
+                }else{
+                	if(this.basic.length == 0){
+                    	this.loadOver = true
+                    }
+                }
+	        })
+	   	}
+    }
+})
+</script>
+
+<style scoped>
+body {
+	position: relative;
+	overflow-x: hidden;
+	overflow: auto;
+	color: #333;
+	background-color: #efeff4;
+}
+a {
+	color: #333;
+}
+a:active {
+	color: #333;
+}
+#app {
+	min-height: 100%;
+	position: relative;
+	z-index: 2;
+	padding-bottom: 2.5rem;
+}
+.page, .page-group {
+	position: relative;
+	overflow: auto;
+	height: auto;
+}
+.bar-tab {
+	position: fixed;
+}
+.buttons-tab {
+	width: 100%;
+	position: relative;
+}
+.buttons-tab .button {
+	color: #333;
+	font-size: .75rem;
+	border: none;
+	-webkit-flex: 1;
+	flex: 1;
+	position: relative;
+}
+.buttons-tab .button.active:after {
+	content: "";
+	width: 1.3rem;
+	height: 2px;
+	margin-left: -0.65rem;
+	background-color: #FE433F;
+	position: absolute;
+	left: 50%;
+	bottom: 0;
+	display: inline-block;
+}
+.buttons-tab .button.active {
+    color: #FE433F;
+	border-color: #FE433F;
+}
+.buttons-tab:after {
+	background-color: #e3e3e3;
+}
+#app {
+	position: relative;
+	z-index: 2;
+	padding-bottom: 2.5rem;
+}
+.bargain-list {
+	padding: 0.6rem .6rem 0 .6rem;
+}
+.bargain-list-i {
+	margin-bottom: 15px;
+	background-color: #fff;
+	-webkit-border-radius: .4rem;
+	border-radius: .4rem;
+}
+.bargain-list-i-t {
+	width: calc(100vw - 1.2rem);
+	height: calc((100vw - 1.2rem) * 0.5);
+	background-position: center;
+	background-size: cover;
+	-webkit-border-radius: .4rem .4rem 0 0;
+	border-radius: .4rem .4rem 0 0;
+}
+.bargain-list-i-c {
+	padding: .3rem .4rem;
+}
+.bargain-list-i-c-t1 {
+	line-height: 1.2rem;
+	font-size: .8rem;
+	margin-top: .1rem;
+	font-weight: 600;
+}
+.bargain-list-i-c-t2 {
+	margin-top: .2rem;
+	display: -webkit-flex;
+	display: flex;
+	justify-content: space-between;
+}
+.bargain-list-i-c-t2-l {
+	padding-right: .25rem;
+	-webkit-flex-shrink: 1;
+	flex-shrink: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.bargain-list-i-c-t2-l h1 {
+	height: 1rem;
+	line-height: 1rem;
+	color: #FE433F;
+	font-size: .7rem;
+	font-weight: normal;
+	margin: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.bargain-list-i-c-t2-l h1 em {
+	color: #999;
+	font-size: .7rem;
+	font-style: normal;
+	text-decoration: line-through;
+	margin-left: .5rem;
+}
+.bargain-list-i-c-t2-l p {
+	height: 1rem;
+	line-height: 1rem;
+	color: #808080;
+	font-size: .65rem;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.bargain-list-i-c-t2-r {
+	display: -webkit-flex;
+	display: flex;
+	align-items: center;
+}
+.bargain-list-i-c-t2-r a {
+	color: #fff;
+	font-size: .6rem;
+	padding: .4rem 1rem;
+	-webkit-flex-shrink: 0;
+	flex-shrink: 0;
+	background: -webkit-linear-gradient(left,#FD9201,#FE433F);
+    background: -o-linear-gradient(right,#FD9201,#FE433F);
+    background: -moz-linear-gradient(right,#FD9201,#FE433F);
+    background: linear-gradient(to right,#FD9201,#FE433F);
+    -webkit-border-radius: 3rem;
+	border-radius: 3rem;
+	white-space:nowrap;
+	display: inline-block;
+}
+.bargain-ft {
+	color: #999;
+	font-size: .6rem;
+	padding: .6rem;
+	text-align: center;
+}
+.sc-loading {
+  font-size: .6rem;
+  color: #969696;
+  line-height: .5rem;
+  text-align: center;
+  padding: .35rem 0;
+}
+.sc-loading i {
+	width: .8rem;
+	display: inline-block;
+}
+.sc-loading i img {
+	width: 100%;
+	vertical-align: -0.25rem;
+}
+.sc-loading span {
+  vertical-align: middle;
+  display: inline-block;
+}
+</style>
+{php include wl_template('common/footer');}

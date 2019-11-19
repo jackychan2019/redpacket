@@ -1,0 +1,1652 @@
+{php include wl_template('common/header');}
+<div class="page-group">
+	<div class="page page-current">
+		<div id="app">
+			<div class="bargain" style="display: none;" v-show="loadBf" v-if="loadBf">
+				<div class="ani-bargain" v-if="bargainAniShow">
+					<div class="ani-bargain-mask"></div>
+					<div class="ani-bargain-d" @click="bargainAniHide()">
+						<div class="ani-bargain-d-a" v-if="bargainAni">
+							<div class="ani-bargain-knife" :class="{knifeAni: bargainAni}">
+								<div class="ani-bargain-knife-kn"></div>
+							</div>
+							<div class="ani-bargain-circle">
+								<div class="circle-l" :class="{circlerightani: bargainAni}">
+									<div class="circle-d"></div>
+								</div>
+								<div class="circle-r" :class="{circleleftani: bargainAni}">
+									<div class="circle-d"></div>
+								</div>
+							</div>
+						</div>
+						<div class="ani-bargain-d-n" v-if="!bargainAni">
+							<div class="ani-bargain-d-n-close"><i class="icon iconfont icon-round_close_light"></i></div>
+							<div class="ani-bargain-d-n-num">已减<span>{{ bargainAniNumTo }}</span>元</div>
+							<div class="prompt">请刷新页面后再进行分享</div>
+						</div>
+					</div>
+				</div>
+				<div class="bargain-bar-right">
+					<a :href="getIndexUrl()">首页</a><a :href="getMyselfUrl()">我的</a><a :href="getPosterUrl()">海报</a>
+					<audio id="bgaudio" ref="bgaudio" style="display: none;" :src="datas.basic.detail.bgmusic" autoplay="autoplay" loop="loop" v-if="datas.basic.detail.bgmusic !== ''"></audio>
+					<div class="bgmusic" :class="{ stopped: !bgMusic }" @click="bgMusicFun()" v-if="datas.basic.detail.bgmusic !== ''"><div class="control"><div class="control-after"></div></div></div>
+				</div>
+				<div class="bargain-share" v-if="share">
+					<div class="bargain-share-mask" @click="share = false">
+						<img src="/addons/weliam_merchant/app/resource/image/guide1.png" {if is_wxapp()}style="right: 50px;"{/if}>
+					</div>
+				</div>
+				<!--
+				<div class="bargain-pop" :class="{bargainPopShow: sign.sign}">
+					<div class="bargain-pop-mask" :class="{bargainPopShow: sign.sign}" @click="sign.sign = !sign.sign"></div>
+					<div class="bargain-pop-d" :class="{bargainPopDShow: sign.sign}">
+						<div class="bargain-pop-sign">
+							<div class="bargain-pop-sign-t1">
+								<div class="bargain-m-title">
+									<div class="bargain-m-title-txt">
+										<span><i class="icons-l"></i>活动报名<i class="icons-r"></i></span>
+									</div>
+								</div>
+							</div>
+							<div class="bargain-m-line">
+								<div class="bargain-m-line-l"><i></i><i></i><i></i><i></i></div>
+								<div class="bargain-m-line-r"><i></i><i></i><i></i><i></i></div>
+							</div>
+							<div class="bargain-pop-sign-t2">
+								<label><input type="number" ref="signPhone" id="signPhone" name="signPhone" placeholder="请输入您的电话" onkeyup="value=value.replace(/[^\d]/g,'')" v-model="sign.mobile"></label>
+							</div>
+							<div class="bargain-pop-sign-t3">
+								报名信息仅用于活动我们不会泄露您的隐私
+							</div>
+							<div class="bargain-pop-sign-t4">
+								<a href="javascript:;" @click="bargain(1)">确认报名</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				-->
+				<div class="bargain-nav">
+					<div class="bargain-nav-t">
+						<em>{{ datas.basic.detail.pv }}人查看</em><em>{{ datas.basic.detail.joinnum }}人参加</em><em>{{ datas.basic.detail.sharenum }}人转发</em>
+					</div>
+				    <div class="shop-swiper">
+				        <div class="swiper-container">
+					        <div class="swiper-wrapper">
+					        	<div class="swiper-slide" v-for="(item, key) in datas.basic.detail.thumbs" :key="key"><img :src="item">
+					            </div>
+					        </div>
+					        <div class="swiper-pagination"></div>
+				        </div>
+				    </div>
+				    <div class="bargain-nav-b"></div>
+				</div>
+				<div class="bargain-main">
+					<div class="bargain-m bargain-m1">
+						<div class="bargain-m1-t1">
+							<div class="bargain-m1-t1-h1">{{ datas.basic.detail.name }}</div>
+							<div class="bargain-m-title">
+								<div class="bargain-m-title-txt">
+									<span><i class="icons-l"></i>距离活动结束还有<i class="icons-r"></i></span>
+								</div>
+							</div>
+							<div class="bargain-m1-t1-h2">
+								<i>{{ datas.ctTime.d }}</i>天<i>{{ datas.ctTime.h }}</i>时<i>{{ datas.ctTime.m }}</i>分<i>{{ datas.ctTime.s }}</i>秒
+							</div>
+						</div>
+						<div class="bargain-m-line">
+							<div class="bargain-m-line-l"><i></i><i></i><i></i><i></i></div>
+							<div class="bargain-m-line-r"><i></i><i></i><i></i><i></i></div>
+						</div>
+						<div class="bargain-m1-t2">
+							<div class="bargain-m1-t2-h1"><img :src="datas.basic.user.avatar"></div>
+							<div class="bargain-m1-t2-h2">
+								{{ datas.basic.user.nickname }}
+							</div>
+							<div class="bargain-m1-t2-current" v-if="datas.basic.userorder">
+								<div class="bargain-m1-t2-current-d">
+									<span>现价:</span><em>{{datas.basic.userorder.price }}元</em>
+								</div>
+							</div>
+							<div class="bargain-m1-t2-h3">
+								<div class="bargain-m1-t2-h3-t" style="display: none;"><span><i>现价：</i><em>11.54元</em></span></div>
+								<div class="bargain-m1-t2-h3-c">
+									<div class="bargain-m1-t2-h3-c-line"></div>
+									<div v-if="datas.basic.userorder">
+										<div  v-if="datas.basic.detail.vipstatus == 1 && datas.basic.vipflag" class="bargain-m1-t2-h3-c-line-d" :style="'width:'+((datas.basic.detail.oldprice - datas.basic.userorder.price) / (datas.basic.detail.oldprice - datas.basic.detail.vipprice)).toFixed(2) * 100 +'%'"></div>
+										<div  v-else class="bargain-m1-t2-h3-c-line-d" :style="'width:'+((datas.basic.detail.oldprice - datas.basic.userorder.price) / (datas.basic.detail.oldprice - datas.basic.detail.price)).toFixed(2) * 100 +'%'"></div>
+									</div>
+								</div>
+								<div class="bargain-m1-t2-h3-b">
+									<span>原价：{{ datas.basic.detail.oldprice }}元</span>
+									<span v-if="datas.basic.detail.vipstatus == 1 && datas.basic.vipflag">底价：{{ datas.basic.detail.vipprice }}元</span>
+									<span v-else>底价：{{ datas.basic.detail.price }}元</span>
+								</div>
+							</div>
+							<div class="bargain-m1-t2-h4">
+								<div class="if_noorderid" v-if="datas.basic.userorder.orderid && datas.basic.userorder.orderid == 0">
+									<div class="if_myself" v-if="datas.basic.ownbargain == 1">
+										<span v-if="datas.basic.detail.vipstatus == 1 && datas.basic.vipflag">
+											<span v-if="datas.basic.userorder.price !== datas.basic.detail.vipprice">
+												<a href="javascript:;" v-if="datas.basic.userorder && datas.ctTime.timestamp > 0" @click="share = true">找人帮忙</a>
+											</span>
+										</span>
+										<span v-else>
+											<span v-if="datas.basic.userorder.price !== datas.basic.detail.price">
+												<a href="javascript:;" v-if="datas.basic.userorder && datas.ctTime.timestamp > 0" @click="share = true">找人帮忙</a>
+											</span>
+										</span>
+										<a href="javascript:;" @click="bargain(1)" v-if="!datas.basic.userorder && datas.ctTime.timestamp > 0">我要报名</a>
+										<a href="javascript:;" class="sign-buy" @click="create0rder()" v-if="datas.basic.userorder && datas.ctTime.timestamp > 0">立即出手</a>
+									</div>
+									<div v-else>
+										<a href="javascript:;" @click="bargain()" v-if="datas.basic.already == 0 && datas.ctTime.timestamp > 0">帮他砍价</a>
+										<a href="javascript:;" class="sign-end" v-if="datas.basic.already == 1">砍价成功</a>
+										<a :href="getRecommendUrl(getCid)" v-if="datas.basic.ownbargain == 0 && datas.ctTime.timestamp > 0">我也要玩</a>
+									</div>
+								</div>
+								<div v-else>
+									<a :href="datas.basic.userorderurl" class="sign-end" v-if="datas.basic.already == 1">查看已支付订单</a>
+									<a href="javascript:;" @click="bargain(1)" v-if="!datas.basic.userorder && datas.ctTime.timestamp > 0 && !datas.basic.already">我要报名</a>
+								</div>
+								<a href="javascript:;" class="sign-end" v-if="datas.ctTime.timestamp <= 0">活动结束</a>
+							</div>
+							<div class="bargain-m-cat-line" v-if="datas.basic.detail.vipstatus == 1"><i v-for="item in 100"></i></div>
+							<div class="bargain-m1-t2-h5" v-if="datas.basic.detail.vipstatus == 1">
+								<a :href="datas.basic.halfa">
+									<h1><span>开通会员卡</span>最低可砍至<em>{{ datas.basic.detail.vipprice }}元</em></h1>
+									<b v-if="datas.basic.vipflag">点击查看<i class="icon iconfont icon-jinrujiantou1"></i></b>
+									<b v-else>立即开通<i class="icon iconfont icon-jinrujiantou1"></i></b>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="bargain-m bargain-m2">
+						<div class="bargain-m2-t1">
+							<div class="bargain-m-title">
+								<div class="bargain-m-title-txt">
+									<span><i class="icons-l"></i>活动介绍<i class="icons-r"></i></span>
+								</div>
+							</div>
+						</div>
+						<div class="bargain-m-line">
+							<div class="bargain-m-line-l"><i></i><i></i><i></i><i></i></div>
+							<div class="bargain-m-line-r"><i></i><i></i><i></i><i></i></div>
+						</div>
+						<div class="bargain-m2-t2">
+							本期奖品<i>{{ datas.basic.detail.stock }}</i>份<em></em>剩余<i>{{ datas.basic.detail.levelnum }}</i>份
+						</div>
+						<div class="bargain-m-cat-line"><i v-for="item in 100"></i></div>
+						<div class="bargain-m2-t3">
+							<div class="bargain-m2-t3-l">
+								<a :href="getStoreUrl()">
+									<h1>{{ datas.basic.merchant.storename }}</h1>
+									<p>{{ datas.basic.merchant.address }}</p>
+								</a>
+							</div>
+							<div class="bargain-m2-t3-r">
+								<div class="bargain-m2-t3-r-d">
+									<a :href="'tel:'+datas.basic.merchant.mobile"><span class="bar-phone"><i class="icon iconfont icon-dianhua1"></i></span></a>
+									<!--<a href="javascript:;" @click="map()"><span class="bar-map"><i class="icon iconfont icon-daohang1"></i></span></a>-->
+									<a href="javascript:;" class="navigation" :data-lat="datas.basic.merchant.location.lat" :data-lng="datas.basic.merchant.location.lng" :data-name="datas.basic.merchant.storename" :data-addr="datas.basic.merchant.address" :data-tel="datas.basic.merchant.mobile"><span class="bar-map"><i class="icon iconfont icon-daohang1"></i></span></a>
+								</div>
+							</div>
+						</div>
+						<div class="bargain-m-cat-line"><i v-for="item in 100"></i></div>
+						<div class="bargain-m2-t4" v-html="datas.basic.detail.detail"></div>
+					</div>
+					<div class="bargain-m bargain-m3" v-if="datas.basic.helplist">
+						<div class="bargain-m3-t1">
+							<div class="bargain-m-title">
+								<div class="bargain-m-title-txt">
+									<span><i class="icons-l"></i>砍价帮帮团<i class="icons-r"></i></span>
+								</div>
+							</div>
+						</div>
+						<div class="bargain-m-line">
+							<div class="bargain-m-line-l"><i></i><i></i><i></i><i></i></div>
+							<div class="bargain-m-line-r"><i></i><i></i><i></i><i></i></div>
+						</div>
+						<div class="bargain-m3-t2">
+							<div class="bargain-m3-t2-i" v-for="(irem, key) in datas.basic.helplist" :key="key">
+								<div class="bargain-m3-t2-i-l"><img :src="irem.avatar"></div>
+								<div class="bargain-m3-t2-i-c">{{ irem.nickname }}</div>
+								<div class="bargain-m3-t2-i-r">帮忙砍掉{{ irem.bargainprice }}元</div>
+							</div>
+						</div>
+					</div>
+					<div class="bargain-m bargain-m4">
+						<div class="bargain-m4-t1"></div>
+						<div class="bargain-m4-t2">
+							<div class="bargain-m4-t2-i" v-for="(item, key) in datas.basic.recommend" :key="key">
+								<a :href="getRecommendUrl(item.id)">
+									<div class="bargain-m4-t2-i-d">
+										<div class="bargain-m4-t2-i-t">
+											<img :src="item.thumb">
+										</div>
+										<div class="bargain-m4-t2-i-c">
+											{{ item.name }}
+										</div>
+										<div class="bargain-m4-t2-i-b">
+											<span>￥{{ item.price }}</span><em>￥{{ item.oldprice }}</em>
+										</div>
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="bargain-m bargain-m5" v-if="datas.basic.userlist.length > 0">
+						<div class="bargain-m5-t1">
+							<div class="bargain-m-title">
+								<div class="bargain-m-title-txt">
+									<span><i class="icons-l"></i>砍价排行榜<i class="icons-r"></i></span>
+								</div>
+							</div>
+						</div>
+						<div class="bargain-m-line">
+							<div class="bargain-m-line-l"><i></i><i></i><i></i><i></i></div>
+							<div class="bargain-m-line-r"><i></i><i></i><i></i><i></i></div>
+						</div>
+						<div class="bargain-m5-t2">
+							<div class="bargain-m5-t2-i" v-for="(irem, key) in datas.basic.userlist" :key="key">
+								<div class="bargain-m5-t2-i-l"><img :src="irem.avatar"></div>
+								<div class="bargain-m5-t2-i-c">{{ irem.nickname }}</div>
+								<div class="bargain-m5-t2-i-r">
+									<h1>当前价格{{ irem.price }}元</h1>
+									<p>({{ irem.updatetime }})</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+var app = new Vue({
+	el: '#app',
+	data: {
+		loadBf: false,
+		bargainAniShow: false,
+		bargainAniCanHide: false,
+		bargainAni: false,
+		bargainMaskRefresh: false,
+		bargainLoading: false,
+		bargainAniNum: 0,
+		bargainAniNumTo: 0.00,
+		bargainNum: 0,
+		getCid: 0,
+		userid: '',
+		storeid: '',
+		sign: {
+			sign: false,
+			mobile: ''
+		},
+		share: false,
+		datas: {
+			basic: {},
+			ctTime: {
+      			timestamp: '',
+  				d: '',
+  				h: '',
+  				m: '',
+  				s: ''
+      		}
+		},
+		bgMusic: true
+	},
+	created: function() {
+		function getPar (par) {
+			var local_url = document.location.href;
+			var get = local_url.indexOf(par +"=");
+			if(get == -1){
+				return false;
+			}
+			var get_par = local_url.slice(par.length + get + 1);
+			var nextPar = get_par.indexOf("&");
+			if(nextPar != -1){
+				get_par = get_par.slice(0, nextPar);
+			}
+			return get_par;
+		}
+		this.getCid = getPar('cid');
+		if(getPar('userid')){
+			this.userid = getPar('userid');
+		}
+		sessionStorage.setItem('bargainurl', null)
+		sessionStorage.setItem('bargainurl', window.location.href)
+		console.log(sessionStorage.getItem('bargainurl'))
+
+		this.getInfo()
+	},
+	methods: {
+		getIndexUrl: function () {
+            return common.createUrl('bargain/bargain_app/bargainlist')
+        },
+        getMyselfUrl: function () {
+            return common.createUrl('member/user/index')
+        },
+        getPosterUrl: function () {
+            return common.createUrl('common/tools/poster',{id:this.getCid,disflag:this.userid,type:'bargain'})
+        },
+        getRecommendUrl: function (i) {
+        	return common.createUrl('bargain/bargain_app/bargaindetail',{cid:i,userid:''})
+        },
+        getOrdersubmitUrl: function () {
+        	return common.createUrl('order/userorder/ordersubmit',{id:this.getCid,specid:this.userid,type:'bargain'})
+        },
+        getStoreUrl: function () {
+        	return common.createUrl('store/merchant/detail',{id:this.storeid})
+        },
+        bargainAniStart: function () {
+        	var that = this
+        	that.bargainAniShow = true
+        	that.bargainAni = true
+        	setTimeout(function(){
+        		that.bargainAni = false
+				that.bargainAniNumAct()
+				that.bargainAniCanHide = true
+			},2000)
+        },
+        bargainAniHide: function () {
+        	if(this.bargainAniCanHide){
+        		this.bargainAniShow = false
+        	}
+        	if(this.bargainMaskRefresh){
+        		var nowurl = window.location.href;
+				var sharenum = nowurl.indexOf('&wxref');
+				if (sharenum>0) {
+					nowurl = nowurl.substr(0, sharenum);
+				}
+				var usernum = nowurl.indexOf('&userid=');
+				if (usernum>0) {
+					nowurl = nowurl.substr(0,usernum);
+				}
+
+				//console.log(nowurl);
+				window.location.href = nowurl+'&userid='+this.userid;
+				sessionStorage.setItem('bargainurl', nowurl+'&userid='+this.userid)
+        	}
+        },
+        bargainAniNumAct: function () {
+        	var that = this
+        	var aniNum = parseFloat((parseFloat(that.bargainNum) / 50).toFixed(2)) //2.5秒执行完数字动画
+        	if(aniNum < 0.01){
+        		aniNum = 0.01
+        	}
+        	if(that.bargainAniNum + aniNum < that.bargainNum){
+        		that.bargainAniNum += aniNum
+        		that.bargainAniNumTo = that.bargainAniNum.toFixed(2)
+        		setTimeout(function(){
+					that.bargainAniNumAct()
+				},50)
+        	}else{
+        		that.bargainAniNumTo = that.bargainNum
+        	}
+        },
+		signPop: function () {
+			this.sign.sign = true
+			this.signFocus()
+		},
+		signFocus: function () {
+			this.$refs.signPhone.focus()
+		},
+		map: function () {
+			wx.openLocation({
+			    latitude: this.datas.basic.merchant.location.lat, // 纬度，浮点数，范围为90 ~ -90
+			    longitude: this.datas.basic.merchant.location.lng, // 经度，浮点数，范围为180 ~ -180。
+			    name: this.datas.basic.merchant.storename, // 位置名
+			    address: this.datas.basic.merchant.address, // 地址详情说明
+			    scale: 20, // 地图缩放级别,整形值,范围从1~28。默认为最大
+			    infoUrl: '' // 在查看位置界面底部显示的超链接,可点击跳转
+			});
+		},
+		getInfo: function (again) {
+			this.$http.get(common.createUrl('bargain/bargain_app/bargaindetailAPI',{'id':this.getCid,userid:this.userid})).then(function(response){
+	        	if(response.body.errno == 3){
+					window.location.href = common.createUrl('member/user/signin',{'backurl':encodeURI(common.createUrl('bargain/bargain_app/bargaindetail',{'cid':this.getCid,userid:this.userid}))})
+				}else{
+	        	var that = this
+	        	that.datas.basic = response.body.data
+	        	if(that.datas.basic.user.mobile !== '' && that.datas.basic.user.mobile !== null){
+	        		that.sign.mobile = that.datas.basic.user.mobile
+	        	}
+	        	that.storeid = that.datas.basic.merchant.id
+	        	if(!again){
+	        		that.datas.ctTime.timestamp = parseInt(that.datas.basic.detail.sytime) > 0 ? parseInt(that.datas.basic.detail.sytime) : 0
+			        var runTime = parseInt(that.datas.ctTime.timestamp)
+			        var year = Math.floor(runTime / 86400 / 365)
+				    runTime = runTime % (86400 * 365)
+				    var month = Math.floor(runTime / 86400 / 30)
+				    runTime = runTime % (86400 * 30)
+				    var day = parseInt(Math.floor(that.datas.ctTime.timestamp * 1000 / 86400000))
+				   	day < 10 ? that.datas.ctTime.d = '0'+day : that.datas.ctTime.d = day
+				    runTime = runTime % 86400
+				    var hour = Math.floor(runTime / 3600)
+				    hour < 10 ? that.datas.ctTime.h = '0'+hour : that.datas.ctTime.h = hour
+				    runTime = runTime % 3600
+				    var minute = Math.floor(runTime / 60)
+				    minute < 10 ? that.datas.ctTime.m = '0'+minute : that.datas.ctTime.m = minute
+				    runTime = runTime % 60
+				    var second = runTime
+				    second < 10 ? that.datas.ctTime.s = '0'+second : that.datas.ctTime.s = second
+				    setInterval(function(){
+				  		if(that.datas.ctTime.timestamp > 0){
+		            		that.datas.ctTime.timestamp += -1
+		            	}
+				  		var runTime = parseInt(that.datas.ctTime.timestamp)
+				        var year = Math.floor(runTime / 86400 / 365)
+					    runTime = runTime % (86400 * 365)
+					    var month = Math.floor(runTime / 86400 / 30)
+					    runTime = runTime % (86400 * 30)
+				    	var day = parseInt(Math.floor(that.datas.ctTime.timestamp * 1000 / 86400000))
+				   		day < 10 ? that.datas.ctTime.d = '0'+day : that.datas.ctTime.d = day
+					    runTime = runTime % 86400
+					    var hour = Math.floor(runTime / 3600)
+					    hour < 10 ? that.datas.ctTime.h = '0'+hour : that.datas.ctTime.h = hour
+					    runTime = runTime % 3600
+					    var minute = Math.floor(runTime / 60)
+					    minute < 10 ? that.datas.ctTime.m = '0'+minute : that.datas.ctTime.m = minute
+					    runTime = runTime % 60
+					    var second = runTime
+					    second < 10 ? that.datas.ctTime.s = '0'+second : that.datas.ctTime.s = second
+				    },1000)
+				    if(that.datas.basic.userorder && that.userid == ''){
+				    	that.userid = that.datas.basic.userorder.id
+						var nowurl = window.location.href;
+						var sharenum = nowurl.indexOf('&wxref');
+						if (sharenum>0) {
+							nowurl = nowurl.substr(0,sharenum);
+						}
+						var usernum = nowurl.indexOf('&userid=');
+						if (usernum>0) {
+							nowurl = nowurl.substr(0,usernum);
+						}
+						sessionStorage.setItem('bargainurl', nowurl+'&userid='+that.userid)
+				    }
+				    that.loadBf = true
+					that.$nextTick(function () {
+				      var swiper = new Swiper('.swiper-container', {
+				      	speed:500,
+					    autoplay: 3000,
+					    autoplayDisableOnInteraction : false,
+					    setWrapperSize:true,
+					    pagination: '.swiper-pagination',
+					    paginationClickable: true
+				      })
+			        })
+
+					//var music = document.getElementById('bgaudio'
+					document.addEventListener("WeixinJSBridgeReady", function () {
+						setTimeout(function(){
+							//music.play()
+							that.$refs.bgaudio.play()
+						},1000)
+					}, false)
+	        	}
+	        	}
+	       	})
+		},
+		bgMusicFun: function () {
+			//var music = document.getElementById('bgaudio')
+			if(this.bgMusic){
+				this.$refs.bgaudio.pause()
+				this.bgMusic = false
+			}else{
+				this.$refs.bgaudio.play()
+				this.bgMusic = true
+			}
+		},
+		bargain: function (sign) {
+		    //报名判断是否关注
+            if(sign == 1 && this.datas.basic.forcefollow == 1 && window.__wxjs_environment != 'miniprogram'){
+                common.ForceFollow('bargain', this.getCid);
+                return false;
+            }
+            //帮忙砍价判断是否关注
+            if(sign != 1 && this.datas.basic.helpBargain == 1 && window.__wxjs_environment != 'miniprogram'){
+                common.ForceFollow('helpbargain', this.userid);
+                return false;
+            }
+	        //砍价 帮忙砍价的操作
+            if(!this.bargainLoading){
+                this.bargainLoading = true
+                if(sign && sign == 1){
+                    this.bargainMaskRefresh = true
+                }
+                this.$http.get(common.createUrl('bargain/bargain_app/bargainAPI',{id:this.getCid,userid:this.userid,mobile:this.sign.mobile})).then(function(response){
+                    //console.log(response)
+                    this.bargainLoading = false
+                    if(response.body.errno == 0){
+                        if(this.datas.basic.ownbargain == 1){
+                            /*
+                            $.toast("报名成功")
+                            setTimeout(function(){
+                                //window.location.href = window.location.href + response.body.data.userid
+                            },300)
+                            */
+
+                            var that = this
+                            that.bargainNum = response.body.data.bargainprice
+                            that.userid = response.body.data.userid
+    //						history.pushState('','',window.location.href+that.userid)
+                            this.getInfo(1)
+                            this.sign.sign = false
+                            that.bargainAniStart()
+                        }else{
+                            /*
+                            $.toast("砍价成功")
+                            setTimeout(function(){
+                                window.location.href = window.location.href
+                            },300)
+                            */
+                            var that = this
+                            that.bargainNum = response.body.data.bargainprice
+                            this.getInfo(1)
+                            that.bargainAniStart()
+                        }
+                    }else if(response.body.errno == 2){
+                        $.confirm(response.body.message,function () {
+                            window.location.href = common.createUrl('member/user/binding',{'backurl':encodeURI(common.createUrl('bargain/bargain_app/bargaindetail',{'cid':this.getCid,userid:this.userid}))})
+                        })
+                    }else if(response.body.errno == 3){
+                        $.confirm(response.body.message,function () {
+                            window.location.href = common.createUrl('member/user/signin',{'backurl':encodeURI(common.createUrl('bargain/bargain_app/bargaindetail',{'cid':this.getCid,userid:this.userid}))})
+                        })
+                    }else if(response.body.errno == 4){
+                        $.confirm(response.body.message,function () {
+                            window.location.href = common.createUrl('order/userorder/orderlist',{'status':'all'})
+                        })
+                    }else if(response.body.errno == 1){
+                        $.toptip(response.body.message)
+                    }
+                })
+            }
+		},
+		create0rder: function () {
+			this.$http.get(common.createUrl('bargain/bargain_app/createorderAPI',{userid:this.userid})).then(function(res){
+				//console.log(res)
+				if(res.body.errno == 0){
+					window.location.href = this.getOrdersubmitUrl()
+				}else{
+					$.toptip(res.body.message)
+				}
+			})
+		}
+	}
+})
+
+function shareover(){
+	var id = "{$id}";
+	$.post("{php echo app_url('bargain/bargain_app/fenxiang_ajax')}", {id:id}, function(result){
+		$.toast('感谢分享');
+	}, 'json');
+}
+
+</script>
+
+<style scoped>
+body {
+	position: relative;
+	overflow-x: hidden;
+	overflow: auto;
+	color: #333;
+	background-color: #49D1FF;
+}
+a {
+	color: #333;
+}
+a:active {
+	color: #333;
+}
+* {
+	word-break: break-all;
+}
+body:after {
+    content: "";
+    display: block;
+    position: absolute;
+    background: url("../../../resource/images/gold.png") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_02.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_03.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_04.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_05.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_06.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_07.png?v=201707241359") no-repeat -10000px -1000px,url("../image/manage/help/help_item2_01.png?v=201707241359") no-repeat -10000px -1000px;
+    width: 0;
+    height: 0
+}
+#app {
+	position: relative;
+	z-index: 2;
+}
+.page, .page-group {
+	position: relative;
+	overflow: auto;
+	height: auto;
+	background-color: #49D1FF;
+}
+.bargain-share-mask {
+	width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,.7);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}
+.bargain-share-mask img {
+	width: 260px;
+	height: 180px;
+	display: inline-block;
+	position: absolute;
+    top: 10px;
+    right: 15px;
+}
+.toast {
+	font-size: .75rem;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	position: fixed;
+}
+.swiper-slide {
+	height: 70vw;
+}
+.swiper-slide img {
+	width: 100%;
+	height: 100%;
+	display: block;
+	object-fit: cover;
+}
+.scroll-top {
+	display: none!important;
+}
+.bargainPopShow {
+	left: 0!important;
+}
+.bargainPopDShow {
+	left: 2rem!important;
+}
+.bargain-pop {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: -9999px;
+	z-index: 99999;
+}
+.bargain-pop-mask {
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,.7);
+	position: fixed;
+	top: 0;
+	left: -9999px;
+	z-index: 1;
+}
+.bargain-pop-d {
+	width: calc(100vw - 4rem);
+	position: fixed;
+	top: 2rem;
+	left: -9999px;
+	z-index: 2;
+}
+.bargain-pop-sign {
+	background-color: #fff;
+	-webkit-border-radius: .5rem;
+    border-radius: .5rem;
+	position: relative;
+	overflow: hidden;
+}
+.bargain-pop-sign-t1 {
+	padding: .75rem;
+    background-color: #FDF0CF;
+}
+.bargain-pop-sign-t2 {
+	padding: 1.2rem .75rem 0 .75rem;
+	position: relative;
+}
+.bargain-pop-sign-t2 input {
+    border: none;
+    font-size: .65rem;
+    width: 100%;
+    height: 2.1rem;
+    padding: 0 .5rem;
+    background-color: #eee;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    display: block;
+}
+.bargain-pop-sign-t3 {
+	font-size: .5rem;
+	color: #ccc;
+	text-align: center;
+	margin-top: .75rem;
+	padding: 0 .5rem;
+}
+.bargain-pop-sign-t4 {
+	margin: 1rem 0;
+    text-align: center;
+}
+.bargain-pop-sign-t4 a {
+	color: #fff;
+    font-size: .75rem;
+    font-weight: 600;
+    padding: .4rem 1.5rem;
+    -webkit-border-radius: 3rem;
+    border-radius: 3rem;
+    background: -webkit-linear-gradient(180deg, #58D6FE, #3EABF9);
+    background: linear-gradient(180deg, #58D6FE, #3EABF9);
+    -webkit-box-shadow: 1px 3px 5px #C8E7FD;
+    box-shadow: 1px 3px 5px #C8E7FD;
+    display: inline-block;
+}
+.bargain-bar-right {
+	width: 40px;
+	position: fixed;
+	top: 2.3rem;
+	right: .6rem;
+	z-index: 9999;
+}
+.bargain-bar-right a {
+	width: 40px;
+	height: 40px;
+	line-height: 40px;
+	text-align: center;
+	color: #3FC2FB;
+	font-size: .6rem;
+	font-weight: 600;
+	margin-bottom: .5rem;
+	background-color: #fff;
+	background-image: url(<?php echo URL_MODULE;?>plugin/bargain/app/resource/images/201807271049202.png);
+	background-repeat: no-repeat;
+	background-size: 100%;
+	background-position: 5px 17px;
+	display: inline-block;
+	box-shadow: 0 0 1px #3FC2FB;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+}
+.bargain-nav {
+	position: relative;
+}
+.bargain-nav-t {
+	width: 100%;
+	color: #fff;
+	display: -webkit-flex;
+	display: flex;
+	justify-content: space-around;
+	background-color: rgba(0,0,0,.36);
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 999;
+}
+.bargain-nav-t em {
+	font-size: .65rem;
+	font-style: normal;
+	padding: .4rem 0;
+}
+.bargain-nav-b {
+	width: 100%;
+	height: 2rem;
+	background-image: url(<?php echo URL_MODULE;?>plugin/bargain/app/resource/images/201807251443211.png);
+	background-repeat: no-repeat;
+	background-size: 100%;
+	background-position: 0 100%;
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	z-index: 999;
+}
+.bargain-main {
+	padding: .6rem;
+	padding-top: .2rem;
+	background-color: #49D1FF;
+}
+.bargain-m {
+	margin-bottom: .6rem;
+	background-color: #fff;
+	-webkit-border-radius: .5rem;
+	border-radius: .5rem;
+	-webkit-box-shadow: -5px 5px 0 0 rgba(0,0,0,.1);
+	box-shadow: -5px 5px 0 0 rgba(0,0,0,.1);
+	overflow: hidden;
+}
+.bargain-m1-t1 {
+	padding: .75rem;
+	background-color: #FDF0CF;
+}
+.bargain-m1-t1-h1 {
+	color: #936749;
+	font-size: .85rem;
+	font-weight: 600;
+	text-align: center;
+}
+.bargain-m1 .bargain-m-title {
+	margin-top: 1.5rem;
+}
+.bargain-m-title-txt {
+	text-align: center;
+}
+.bargain-m-title-txt span {
+	min-width: 100px;
+	font-size: .7rem;
+	color: #936749;
+	padding: .2rem .7rem;
+	background-color: #FAD553;
+	-webkit-border-radius: .6rem;
+	border-radius: .6rem;
+	display: inline-block;
+	position: relative;
+}
+.bargain-m-title-txt span:before {
+	content: "";
+	width: 90%;
+	height: 5px;
+	background-color: #FAD553;
+	position: absolute;
+	left: 5%;
+	top: -1px;
+	border-radius: 50%;
+}
+.bargain-m-title-txt span:after {
+	content: "";
+	width: 100%;
+	height: 5px;
+	background-color: #FDF0CF;
+	position: absolute;
+	left: 0;
+	bottom: -4px;
+	border-radius: 50%;
+}
+.icons-l {
+	width: 10px;
+	height: 23px;
+	background-image: url(<?php echo URL_MODULE;?>plugin/bargain/app/resource/images/201807251443212.png);
+	background-repeat: no-repeat;
+	background-size: 100%;
+	position: absolute;
+	left: -0.45rem;
+	top: -0.25rem;
+}
+.icons-r {
+	width: 10px;
+	height: 23px;
+	background-image: url(<?php echo URL_MODULE;?>plugin/bargain/app/resource/images/201807251443213.png);
+	background-repeat: no-repeat;
+	background-size: 100%;
+	position: absolute;
+	right: -0.45rem;
+	top: -0.25rem;
+}
+.bargain-m1-t1-h2 {
+	color: #936749;
+	font-size: .6rem;
+	text-align: center;
+	margin: 1rem 0 .4rem 0;
+}
+.bargain-m1-t1-h2 i {
+	font-size: .8rem;
+	font-weight: 600;
+	font-style: normal;
+	margin: 0 .25rem;
+	padding: .15rem .2rem;
+	background-color: #fff;
+	-webkit-border-radius: 2px;
+	border-radius: 2px;
+	border: .03rem solid #ECC29C;
+}
+.bargain-m-line {
+	width: 100%;
+	height: .05rem;
+	background-color: #fff;
+	position: relative;
+}
+.bargain-m-line-l {
+	width: 1.8rem;
+	display: -webkit-flex;
+	display: flex;
+	position: absolute;
+	top: -0.45rem;
+	left: 0;
+}
+.bargain-m-line-l i {
+	height: .9rem;
+	display: block;
+	-webkit-flex: 1;
+	flex: 1;
+	-webkit-border-radius: 3rem;
+	border-radius: 3rem;
+}
+.bargain-m-line-l i:nth-child(odd) {
+	background: #FDF0CF;
+}
+.bargain-m-line-l i:nth-child(even) {
+	background: #fff;
+}
+.bargain-m-line-l i:nth-child(3) {
+	position: relative;
+}
+.bargain-m-line-l i:nth-child(3):after {
+	content: "";
+	width: .45rem;
+	height: .45rem;
+	margin-top: .15rem;
+	background-color: #FDF0CF;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	display: inline-block;
+	position: absolute;
+	left: 0;
+	bottom: -0.6rem;
+}
+.bargain-m-line-r {
+	width: 1.8rem;
+	display: -webkit-flex;
+	display: flex;
+	position: absolute;
+	top: -0.45rem;
+	right: 0;
+}
+.bargain-m-line-r i {
+	height: .9rem;
+	display: block;
+	-webkit-flex: 1;
+	flex: 1;
+	-webkit-border-radius: 3rem;
+	border-radius: 3rem;
+}
+.bargain-m-line-r i:nth-child(odd) {
+	background: #FDF0CF;
+}
+.bargain-m-line-r i:nth-child(even) {
+	background: #fff;
+}
+.bargain-m-line-r i:nth-child(3) {
+	height: .6rem;
+	position: relative;
+}
+.bargain-m-line-r i:nth-child(3):after {
+	content: "";
+	width: .45rem;
+	height: .45rem;
+	margin-top: .15rem;
+	background-color: #FDF0CF;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	display: inline-block;
+	position: absolute;
+	left: 0;
+	bottom: -0.6rem;
+}
+.bargain-m1-t2 {
+	position: relative;
+}
+.bargain-m1-t2-h1 {
+	width: 2.1rem;
+	height: 2.1rem;
+	margin: 0 auto;
+	margin-top: -0.2rem;
+	background: #fff;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	border: 1px solid #ECC29C;
+}
+.bargain-m1-t2-h1 img {
+	width: 2rem;
+	height: 2rem;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+	display: block;
+}
+.bargain-m1-t2-h2 {
+	height: 1.05rem;
+	line-height: 1.05rem;
+	color: #555;
+	font-size: .75rem;
+	text-align: center;
+	margin-top: .4rem;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.bargain-m1-t2-current {
+	font-size: .75rem;
+	text-align: center;
+	margin-top: .5rem;
+}
+.bargain-m1-t2-current-d {
+	padding: .2rem .7rem;
+	background-color: #eee;
+	-webkit-border-radius: .6rem;
+    border-radius: .6rem;
+    display: inline-block;
+}
+.bargain-m1-t2-current span {
+	color: #333;
+	font-weight: 600;
+}
+.bargain-m1-t2-current em {
+	color: #FF433F;
+	font-style: normal;
+	margin-left: .5rem;
+	font-weight: 600;
+}
+.bargain-m1-t2-h3 {
+	margin-top: .75rem;
+}
+.bargain-m1-t2-h3-t {
+	text-align: center;
+}
+.bargain-m1-t2-h3-t span {
+	font-size: .6rem;
+	padding: .2rem .8rem;
+	background-color: #F3F4F5;
+	-webkit-border-radius: 3rem;
+	border-radius: 3rem;
+}
+.bargain-m1-t2-h3-t span i {
+	color: #000;
+	font-style: normal;
+}
+.bargain-m1-t2-h3-t span em {
+	color: #FE433F;
+	font-style: normal;
+}
+.bargain-m1-t2-h3-c {
+	margin: 0 1rem;
+	margin-top: 1rem;
+	position: relative;
+}
+.bargain-m1-t2-h3-c-line {
+	height: .3rem;
+	background-color: #FEF1CF;
+	-webkit-border-radius: .25rem;
+	border-radius: .25rem;
+}
+.bargain-m1-t2-h3-c-line-d {
+	height: .3rem;
+	position: absolute;
+	left: 0;
+	top: 0;
+	background-color: #FBD553;
+	-webkit-border-radius: .25rem;
+	border-radius: .25rem;
+}
+.bargain-m1-t2-h3-b {
+	color: #232323;
+	font-size: .7rem;
+	margin: 0 1rem;
+	margin-top: .15rem;
+	display: -webkit-flex;
+	display: flex;
+	justify-content: space-between;
+}
+.bargain-m1-t2-h4 {
+	margin: 1rem 0;
+	text-align: center;
+}
+.bargain-m1-t2-h4 a {
+	color: #fff;
+	font-size: .8rem;
+	font-weight: 600;
+	margin: 0 .25rem;
+	padding: .5rem 1.8rem;
+	-webkit-border-radius: 3rem;
+	border-radius: 3rem;
+	background: -webkit-linear-gradient(180deg, #58D6FE, #3EABF9);
+	background: linear-gradient(180deg, #58D6FE, #3EABF9);
+	-webkit-box-shadow: 1px 3px 5px #C8E7FD;
+	box-shadow: 1px 3px 5px #C8E7FD;
+	display: inline-block;
+}
+.bargain-m1-t2-h4 .sign-end {
+	background: -webkit-linear-gradient(90deg, #CACBCA, #9B9B9B);
+	background: linear-gradient(90deg, #CACBCA, #9B9B9B);
+	-webkit-box-shadow: 1px 3px 5px #E0E0E0;
+	box-shadow: 1px 3px 5px #E0E0E0;
+}
+.bargain-m1-t2-h4 .sign-buy {
+	background: -webkit-linear-gradient(90deg, #FD9201, #FE433F);
+	background: linear-gradient(90deg, #FD9201, #FE433F);
+	-webkit-box-shadow: 1px 3px 5px #E0E0E0;
+	box-shadow: 1px 3px 5px #E0E0E0;
+}
+.bargain-m-cat-line {
+	height: .15rem;
+	padding: 0 .75rem;
+	margin-left: -0.25rem;
+	overflow: hidden;
+}
+.bargain-m-cat-line i {
+	display: inline-block;
+	height: .15rem;
+	width: 1px;
+	margin-left: .25rem;
+	border-right: 1px solid #E5E5E5;
+	-webkit-transform: rotate(135deg);
+	transform: rotate(135deg);
+}
+.bargain-m1-t2-h5 a {
+	color: #999;
+	font-size: .6rem;
+	margin: 1rem .75rem;
+	display: block;
+	position: relative;
+}
+.bargain-m1-t2-h5 a h1 {
+	height: 1.05rem;
+	line-height: 1.05rem;
+	font-size: .7rem;
+	font-weight: normal;
+	margin: 0;
+	position: relative;
+	z-index: 1;
+	overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.bargain-m1-t2-h5 a span {
+	color: #FF3F6D;
+	font-weight: 600;
+	font-size: .75rem;
+	text-align: center;
+	margin-right: .3rem;
+}
+.bargain-m1-t2-h5 a em {
+	color: #FF6060;
+	font-size: .65rem;
+	font-style: normal;
+	font-weight: 600;
+	background-color: #FDF304;
+	padding: .1rem .4rem;
+	-webkit-border-radius: 3rem;
+	border-radius: 3rem;
+	margin: 0 .15rem;
+}
+.bargain-m1-t2-h5 a b {
+	height: 1.05rem;
+	line-height: 1.05rem;
+	font-weight: normal;
+	font-size: .7rem;
+	display: inline-block;
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+.bargain-m1-t2-h5 a b i {
+	width: .8rem;
+	color: #999;
+	font-size: 1.05rem;
+	vertical-align: -0.2rem;
+}
+.bargain-m2-t1 {
+    padding: .75rem;
+    background-color: #FDF0CF;
+}
+.bargain-m2-t2 {
+	color: #232323;
+	font-size: .8rem;
+	padding: .6rem;
+	position: relative;
+}
+.bargain-m2-t2 i {
+	color: #FF433F;
+    font-size: .8rem;
+    font-weight: 600;
+    font-style: normal;
+    margin: 0 .25rem;
+    padding: 0 .5rem;
+    background-color: #fff;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+    border: 1px solid #ECC29C;
+}
+.bargain-m2-t2 em {
+	margin-left: 1rem;
+}
+.bargain-m2-t3 {
+	padding: .75rem;
+	display: -webkit-flex;
+	display: flex;
+	justify-content: space-between;
+}
+.bargain-m2-t3-l {
+	padding-right: .25rem;
+	-webkit-flex-shrink: 1;
+	flex-shrink: 1;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+}
+.bargain-m2-t3-l h1 {
+	line-height: 1.5rem;
+	color: #232323;
+	font-size: .75rem;
+	font-weight: normal;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+	margin: 0;
+}
+.bargain-m2-t3-l p {
+	line-height: 1.05rem;
+	color: #999;
+	font-size: .65rem;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+}
+.bargain-m2-t3-r {
+	width: 2.85rem;
+	display: -webkit-flex;
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	-webkit-flex-shrink: 0;
+	flex-shrink: 0;
+}
+.bargain-m2-t3-r-d {
+	display: inline-block;
+}
+.bargain-m2-t3-r span {
+	width: 1.05rem;
+	height: 1.05rem;
+	line-height: 1.05rem;
+	color: #fff;
+	text-align: center;
+	display: inline-block;
+	float: right;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+}
+.bargain-m2-t3-r span i {
+	font-size: .7rem;
+}
+.bargain-m2-t3-r .bar-phone {
+	background-color: #FFA824;
+}
+.bargain-m2-t3-r .bar-map {
+	margin-right: .75rem;
+	background-color: #29B0EF;
+}
+.bargain-m2-t4 {
+	padding: .75rem;
+}
+.bargain-m2-t4 p {
+	font-size: .7rem;
+	margin-bottom: .5rem;
+}
+.bargain-m2-t4 p:last-child {
+	margin-bottom: 0
+}
+.bargain-m2-t4 img {
+	max-width: 100%;
+	display: block;
+	margin: .5rem auto;
+}
+.bargain-m3-t1 {
+    padding: .75rem;
+    background-color: #FDF0CF;
+}
+.bargain-m3-t2 {
+	position: relative;
+}
+.bargain-m3-t2-i {
+	margin-bottom: .75rem;
+	padding: 0 .75rem;
+	display: -webkit-flex;
+	display: flex;
+	justify-content: flex-start;
+}
+.bargain-m3-t2-i:first-child {
+	margin-top: .75rem;
+}
+.bargain-m3-t2-i-l {
+	width: 1.8rem;
+	height: 1.8rem;
+	-webkit-flex-shrink: 0;
+	flex-shrink: 0;
+}
+.bargain-m3-t2-i-l img {
+	width: 100%;
+	height: 100%;
+	display: block;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+}
+.bargain-m3-t2-i-c {
+	height: 1.8rem;
+	line-height: 1.8rem;
+	color: #666;
+	font-size: .7rem;
+	padding: 0 .5rem;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	-webkit-flex: 1;
+	flex: 1;
+}
+.bargain-m3-t2-i-r {
+	height: 1.8rem;
+	line-height: 1.8rem;
+	color: #FF433F;
+	font-size: .7rem;
+	-webkit-flex-shrink: 0;
+	flex-shrink: 0;
+}
+.bargain-m4-t1 {
+	padding: 1rem .75rem;
+	background-image: url(<?php echo URL_MODULE;?>plugin/bargain/app/resource/images/201807271049201.png);
+	background-repeat: no-repeat;
+	background-size: 30%;
+	background-position: center;
+}
+.bargain-m4-t2 {
+	padding: 0 .75rem .75rem ;
+	display: -webkit-flex;
+	display: flex;
+	justify-content: space-between;
+}
+.bargain-m4-t2-i:first-child {
+	margin-right: .5rem;
+}
+.bargain-m4-t2-i {
+	width: calc((100vw - 3.2rem) / 2);
+	height: calc((100vw - 3.2rem) / 2 + 3.2rem);
+	position: relative;
+}
+.bargain-m4-t2-i-d {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+}
+.bargain-m4-t2-i-t {
+	height: calc((100vw - 3.2rem) / 2);
+}
+.bargain-m4-t2-i-t img {
+	width: 100%;
+	height: 100%;
+	display: block;
+	object-fit: cover;
+}
+.bargain-m4-t2-i-c {
+	height: 1.75rem;
+	line-height: .875rem;
+	color: #000;
+	font-size: .7rem;
+	margin-top: .3rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+.bargain-m4-t2-i-b {
+	height: 1.05rem;
+	line-height: 1.05rem;
+	margin-top: .25rem;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: normal;
+	word-break: break-all;
+}
+.bargain-m4-t2-i-b span {
+	color: #FF433F;
+	font-size: .75rem;
+}
+.bargain-m4-t2-i-b em {
+	height: 1.05rem;
+	line-height: 1.05rem;
+	color: #999;
+	font-size: .65rem;
+	font-style: normal;
+	text-decoration: line-through;
+	margin-left: .15rem;
+}
+.bargain-m5-t1 {
+	padding: .75rem;
+    background-color: #FDF0CF;
+}
+.bargain-m5-t2 {
+	position: relative;
+}
+.bargain-m5-t2-i {
+	margin-bottom: .75rem;
+	padding: 0 .75rem;
+	display: -webkit-flex;
+	display: flex;
+	justify-content: flex-start;
+}
+.bargain-m5-t2-i:first-child {
+	margin-top: .75rem;
+}
+.bargain-m5-t2-i-l {
+	width: 1.8rem;
+	height: 1.8rem;
+	-webkit-flex-shrink: 0;
+	flex-shrink: 0;
+}
+.bargain-m5-t2-i-l img {
+	width: 100%;
+	height: 100%;
+	display: block;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+}
+.bargain-m5-t2-i-c {
+	height: 1.8rem;
+	line-height: 1.8rem;
+	color: #666;
+	font-size: .65rem;
+	padding: 0 .5rem;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	-webkit-flex: 1;
+	flex: 1;
+}
+.bargain-m5-t2-i-r {
+	height: 1.5rem;
+	line-height: 1.5rem;
+	color: #FF433F;
+	font-size: .6rem;
+	-webkit-flex-shrink: 0;
+	flex-shrink: 0;
+}
+.bargain-m5-t2-i-r h1 {
+	height: 1rem;
+	line-height: 1rem;
+	font-size: .7rem;
+	color: #232323;
+	font-weight: normal;
+	margin: 0;
+}
+.bargain-m5-t2-i-r p {
+	height: .75rem;
+	line-height: .7rem;
+	font-size: .5rem;
+	color: #999;
+}
+.ani-bargain-mask {
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,.7);
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 10000;
+}
+.ani-bargain-d {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 10001;
+}
+.ani-bargain-d-a {
+	width: 15rem;
+	height: 25.98rem;
+	margin: -12.99rem 0 0 -7.5rem;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	overflow: hidden;
+}
+@-webkit-keyframes knifeAni {
+	0%   {top: -4rem;left: -2.3094rem;opacity: 0.9;}
+	70%  {opacity: 0.9;}
+	100% {top: 25rem;left: 14.43375rem;opacity: 0;}
+}
+@keyframes knifeAni {
+	0%   {top: -4rem;left: -2.3094rem;opacity: 0.9;}
+	70%  {opacity: 0.9;}
+	100% {top: 25rem;left: 14.43375rem;opacity: 0;}
+}
+.knifeAni {
+	-webkit-animation: .8s knifeAni;
+	animation: .8s knifeAni;
+}
+.ani-bargain-knife {
+	width: 1px;
+	height: 1px;
+	position: absolute;
+	top: -4rem;
+	left: -2.3094rem;
+	-webkit-transform: rotate(60deg);
+	transform: rotate(calc((100vw / 100vh)deg));
+	opacity: 0;
+	z-index: 1;
+}
+.ani-bargain-knife-kn {
+	width: 5rem;
+	height: .25rem;
+	background-color: #fff;
+	border-radius: 50%;
+	box-shadow: 0 0 8px #fff;
+	position: absolute;
+	top: -0.125rem;
+	left: 0;
+}
+.ani-bargain-circle {
+	width: 1px;
+    height: 1px;
+    margin: 3rem 0 0 1.5rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+	-webkit-transform: rotate(330deg);
+	transform: rotate(330deg);
+}
+@-webkit-keyframes circleleftani {
+	0%   {opacity: 1;}
+	10%  {opacity: 1;}
+	30%  {opacity: 1;}
+	100% {opacity: 0;}
+}
+@keyframes circleleftani {
+	0%   {opacity: 1;}
+	10%  {opacity: 1;}
+	30%  {opacity: 1;}
+	100% {opacity: 0;}
+}
+.circleleftani {
+	-webkit-animation: 2s circleleftani;
+	animation: 2s circleleftani;
+}
+@-webkit-keyframes circlerightani {
+	0%   {top: 0;left: 0;opacity: 1;}
+	10%  {top: 0;left: 0;opacity: 1;}
+	30%  {top: .5rem;left: .25rem;opacity: 1;}
+	100% {top: .5rem;left: .25rem;opacity: 0;}
+}
+@keyframes circlerightani {
+	0%   {top: 0;left: 0;opacity: 1;}
+	10%  {top: 0;left: 0;opacity: 1;}
+	30%  {top: .5rem;left: .25rem;opacity: 1;}
+	100% {top: .5rem;left: .25rem;opacity: 0;}
+}
+.circlerightani {
+	-webkit-animation: 2s circlerightani;
+	animation: 2s circlerightani;
+}
+.ani-bargain-circle .circle-l {
+	width: 1px;
+    height: 1px;
+    position: absolute;
+}
+.ani-bargain-circle .circle-l .circle-d {
+	width: 3rem;
+    height: 6rem;
+    background-image: url(<?php echo URL_MODULE;?>plugin/bargain/app/resource/images/gold.png);
+    background-size: 200%;
+    background-repeat: no-repeat;
+    position: absolute;
+    background-position: 100% 0;
+    left: 0;
+    top: -6rem;
+    opacity: 1;
+}
+.ani-bargain-circle .circle-r {
+	width: 1px;
+    height: 1px;
+    position: absolute;
+}
+.ani-bargain-circle .circle-r .circle-d {
+	width: 3rem;
+    height: 6rem;
+    background-image: url(<?php echo URL_MODULE;?>plugin/bargain/app/resource/images/gold.png);
+    background-size: 200%;
+    background-repeat: no-repeat;
+    background-position: 0;
+    position: absolute;
+    top: -6rem;
+    right: 0;
+    opacity: 1;
+}
+.ani-bargain-d-n {
+	width: 15rem;
+	height: 15rem;
+	margin: -7.5rem 0 0 -7.5rem;
+	background-image: url(<?php echo URL_MODULE;?>plugin/bargain/app/resource/images/bargain_success.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	overflow: hidden;
+}
+.ani-bargain-d-n-close {
+	width: 1.5rem;
+	height: 1.5rem;
+	position: absolute;
+	top: 1rem;
+	right: .5rem;
+}
+.ani-bargain-d-n-close i {
+	color: #fff;
+	font-size: 1.7rem;
+}
+.ani-bargain-d-n-num {
+	height: 1.8rem;
+	line-height: 1.8rem;
+	color: #FDDE46;
+	font-size: .8rem;
+	text-indent: 1rem;
+	text-align: center;
+	font-weight: 600;
+	margin-top: 7.5rem;
+}
+.ani-bargain-d-n-num span {
+	font-size: 1.2rem;
+	padding: 0 .15rem;
+}
+.ani-bargain-d-n .prompt {width: 100%;color: rgba(255, 255, 255, .75);font-size: .7rem;text-align: center;position: absolute;top: 0;left: 0;}
+.bgmusic{position: relative;top: 0;right: 0;width: 36px;height: 36px;}
+.bgmusic .control{background: url(/addons/weliam_merchant/app/resource/image/music.c0fda016db.gif) transparent no-repeat 50%;background-size: contain;width: 2.5rem;height: 2.5rem;}
+.bgmusic.stopped .control{background: none;}
+.bgmusic .control .control-after{position: absolute;background: url(/addons/weliam_merchant/app/resource/image/music_off.8d94020a5c.png) transparent no-repeat 50%;background-size: 100% 100%;-webkit-animation: rotate2d 1.2s linear infinite;animation: rotate2d 1.2s linear infinite;z-index: -1;width: 100%;height: 100%;}
+.bgmusic.stopped .control .control-after{-webkit-animation: none;animation: none;}
+@keyframes rotate2d{from{transform:rotate(0)}
+to{transform:rotate(360deg)}}
+
+
+</style>
+
+{php include wl_template('common/footer');}

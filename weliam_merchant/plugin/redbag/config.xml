@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<manifest>
+	<application>
+		<name><![CDATA[双向红包]]></name>
+		<identifie><![CDATA[redbag]]></identifie>
+		<version><![CDATA[1.0.0]]></version>
+		<type><![CDATA[market]]></type>
+		<description><![CDATA[双向红包，最牛逼的营销工具（开发中）。]]></description>
+		<author><![CDATA[微蚁CMS]]></author>
+		<url><![CDATA[http://www.vipshw.cn/]]></url>
+	</application>
+	<setting>
+		<agent embed="false" />
+		<system embed="true" />
+		<task embed="true" />
+	</setting>
+	<agentmenu>
+	</agentmenu>
+	<systemmenu>
+		<menu title="双向红包" font="fa-inbox">
+			<entry title="关联双向红包" ac="wxappset" do="relation" iscover="true" />
+			<entry title="双向红包设置" ac="wxappset" do="setting" />
+		</menu>
+		<menu title="入口" font="fa-inbox">
+			<entry title="双向红包路径" ac="wxappset" do="applink" />
+		</menu>
+	</systemmenu>
+</manifest>
