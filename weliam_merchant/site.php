@@ -121,7 +121,7 @@ class Weliam_merchantModuleSite extends WeModuleSite {
 
 		include wl_template('common/pay');
 	}
-	
+
 	public function payResult($params) {
 		define('IN_APP', true);
 	    PayResult::main($params);
