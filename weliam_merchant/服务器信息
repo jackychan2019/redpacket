@@ -17,3 +17,10 @@ validity_end    有效期结束日期
 create_time     创建时间
 used_time     使用时间
 
+数据库  o2o_sctsck_com   iDm8FGss7yLsesWM   o2o.sctsck.com
+
+
+
+分销信息
+select * from ims_wlmerchant_distributor t where leadid=15510
+https://o2o.sctsck.com/web/index.php?c=site&a=entry&m=weliam_merchant&p=distribution&ac=dissysbase&do=adddistributor&todo=lowpeople&memid=15510

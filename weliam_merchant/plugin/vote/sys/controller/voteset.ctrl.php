@@ -21,6 +21,9 @@ class Voteset_WeliamController
 	{
 		global $_W;
 		global $_GPC;
+		
+	//	die('aaaaa');
+	header("Location:".'https://'.$_SERVER['HTTP_HOST']."/web/index.php?c=site&a=entry&do=manage&m=tyzm_diamondvote");
 		$relation = pdo_get(PDO_NAME . 'wxapp_relation', array('uniacid' => $_W['uniacid']));
 
 		if (checksubmit('submit')) {
@@ -51,6 +54,7 @@ class Voteset_WeliamController
 				$value['has'] = 'yes';
 			}
 		}
+		
 
 		include wl_template('wxapp/relation');
 	}

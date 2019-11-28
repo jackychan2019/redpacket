@@ -9,6 +9,8 @@ defined('IN_IA') or exit('Access Denied');
 require_once IA_ROOT."/addons/weliam_merchant/core/common/defines.php";
 require_once PATH_CORE."common/autoload.php";
 Func_loader::core('global');
+//Jk_test::demo('hello...ss');exit;
+//die('aaaa====');
 
 class Weliam_merchantModuleSite extends WeModuleSite {
 	
