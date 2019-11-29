@@ -23,4 +23,16 @@ used_time     使用时间
 
 分销信息
 select * from ims_wlmerchant_distributor t where leadid=15510
-https://o2o.sctsck.com/web/index.php?c=site&a=entry&m=weliam_merchant&p=distribution&ac=dissysbase&do=adddistributor&todo=lowpeople&memid=15510
+https://o2o.sctsck.com/web/index.php?c=site&a=entry&m=weliam_merchant
+&p=distribution&ac=dissysbase&do=adddistributor&todo=lowpeople&memid=15510
+
+
+//活动页面
+https://o2o.sctsck.com/app/./index.php?i=4&c=entry&rid=1&isopenlink=first&do=index&m=tyzm_diamondvote
+//活动列表
+https://o2o.sctsck.com/web/index.php?c=site&a=entry&do=manage&m=tyzm_diamondvote
+
+
+
+插件展示
+https://o2o.sctsck.com/web/index.php?c=site&a=entry&m=weliam_merchant&p=app&ac=plugins&do=index&
