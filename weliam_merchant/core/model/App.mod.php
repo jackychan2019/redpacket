@@ -4,8 +4,10 @@ class App
 {
 	static public function getPlugins($type = 3)
 	{
-		$styles = Util::traversingFiles(PATH_PLUGIN);
+		$styles = Util::traversingFiles(PATH_PLUGIN);    //读取文件夹
 		$pluginsset = array();
+		
+		var_dump($styles);echo "<br>";
 
 		foreach ($styles as $key => $value) {
 			$config = self::ext_plugin_config($value);
@@ -44,6 +46,7 @@ class App
 		}
 
 		$pluginsset = Util::multi_array_sort($pluginsset, 'displayorder', SORT_DESC);
+		var_dump($pluginsset);exit;
 		return $pluginsset;
 	}
 

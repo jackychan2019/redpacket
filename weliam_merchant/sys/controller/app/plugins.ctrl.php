@@ -9,12 +9,17 @@ class Plugins_WeliamController
 
 		if (is_agent()) {
 			$plugins = App::get_apps($_W['aid'], 'agent');
+			//die('aaaa');
 		}
 		else {
 			$plugins = App::get_apps($_W['uniacid']);
+		//	die('bbb');
 		}
 
 		$category = App::getCategory();
+		
+		var_dump($plugins);exit;
+		
 		include wl_template('app/plugins_list');
 	}
 }
