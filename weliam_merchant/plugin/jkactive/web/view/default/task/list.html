@@ -1,0 +1,100 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs" id="myTab">
+	<li class="active">
+		<a href="#">任务管理</a>
+	</li>
+</ul>
+<div class="app-content">
+	<div class="app-filter">
+		<div class="filter-action">
+			<a href="{php echo web_url('jkactive/Task/add')}" class="btn btn-primary">添加任务</a>
+		</div>
+	</div>
+	<div class="app-table-list">
+		<div class="table-responsive">
+			<table class="table table-hover table-bordered">
+				<thead>
+				<tr>
+					<th class="text-center" style="width:40px;"> </th>
+					<th class="text-center" style="width:200px;">任务名称</th>
+					<th class="text-center" style="width:60px;">任务总数量</th>
+					<th class="text-center" style="width:60px;">任务类型</th>
+					<th class="text-center" style="width:100px;">需要完成的数量</th>
+					<th class="text-center" style="width:60px;">领取条件</th>
+					<th class="text-center" style="width:60px;">奖励类型</th>
+					<th class="text-center" style="width:60px;">奖励数量</th>
+					<th class="text-center" style="width:100px;">任务生效日期</th>
+					<th class="text-center" style="width:100px;">任务截止日期</th>
+					<th class="text-center" style="width:100px;">任务创建(变更)时间</th>
+					<th class="text-center" style="width:60px;">任务详单</th>
+					<th class="text-center" style="width:100px;">操作</th>
+				</tr>
+				</thead>
+				<tbody>
+				{loop $data $item}
+				<tr class="text-center">
+					<td>
+						<img src="{php echo tomedia($item['img'])}" data-url="{php echo tomedia($item['img'])}" onerror="this.src='{php echo tomedia($item['img'])}'" class="scrollLoading" height="50px" width="100px" />
+					</td>
+					<td>
+						{$item['title']}
+					</td>
+					<td>
+						{$item['max_num']}
+					</td>
+					<td>
+						{$item['task_name']}
+					</td>
+					<td>
+						{$item['complete_num']}
+					</td>
+					<td>
+						{$item['condition_name']}
+					</td>
+					
+					<td>
+						{$item['reward_name']}
+					</td>
+					
+					<td>
+						{$item['reward_num']}
+					</td>
+					
+					<td>
+						{$item['begin']}
+					</td>
+					
+					<td>
+						{$item['end']}
+					</td>
+					
+					<td>
+						{$item['updatetime']}
+					</td>
+					
+					<td>
+						<a href="{php echo web_url('jkactive/Task/details',array('id'=>$item['id']))}">查看</a>
+					</td>
+					
+					<td class="text-center">
+						<a href="{php echo web_url('jkactive/Task/add',array('id'=>$item['id']))}">编辑 </a>
+						-
+						<a href="{php echo web_url('jkactive/Task/del',array('id'=>$item['id']))}">删除 </a>
+
+					</td>
+				</tr>
+				{/loop}
+				</tbody>
+			</table>
+		</div>
+		<div class="app-table-foot clearfix">
+			<div class="pull-left">
+				
+			</div>
+			<div class="pull-right">
+				{$pager}
+			</div>
+		</div>
+	</div>
+</div>
+{php include wl_template('common/footer');}

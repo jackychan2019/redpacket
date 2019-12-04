@@ -2,7 +2,7 @@
 <manifest>
 	<application>
 		<name><![CDATA[任务管理]]></name>
-		<identifie><![CDATA[pocket]]></identifie>
+		<identifie><![CDATA[jkactive]]></identifie>
 		<version><![CDATA[1.0.0]]></version>
 		<type><![CDATA[expand]]></type>
 		<description><![CDATA[发布管理任务]]></description>
@@ -14,32 +14,11 @@
 		<system embed="true" />
 		<task embed="true" />
 	</setting>
-	<agentmenu>
-		<menu title="活动管理" font="fa-inbox">
-			<entry title="活动列表" ac="Slide" do="lists" iscover="true"></entry>
-			<entry title="分类列表" ac="Type" do="lists" ></entry>
-		</menu>
-		<menu title="帖子" font="fa-inbox" >
-			<entry title="帖子列表" ac="Tiezi" do="lists"></entry>
-			<entry title="订单列表" ac="Tiezi" do="orders"></entry>
-		</menu>
-		<menu title="设置" font="fa-inbox" >
-			<entry title="基础设置" ac="BasicSetting" do="basicsetting"></entry>
-			<entry title="入口信息" ac="BasicSetting" do="entranceinfo"></entry>
-		</menu>
-	</agentmenu>
+
 	<systemmenu>
-		<menu title="活动管理" font="fa-inbox">
-			<entry title="活动列表" ac="Slide" do="lists" iscover="true"></entry>
-			<entry title="分类列表" ac="Type" do="lists" ></entry>
+		<menu title="任务管理" font="fa-inbox">
+			<entry title="任务列表" ac="Task" do="lists" iscover="true"></entry>		
 		</menu>
-		<menu title="帖子" font="fa-inbox" >
-			<entry title="帖子列表" ac="Tiezi" do="lists"></entry>
-			<entry title="订单列表" ac="Tiezi" do="orders"></entry>
-		</menu>
-		<menu title="设置" font="fa-inbox" >
-			<entry title="基础设置" ac="BasicSetting" do="basicsetting"></entry>
-			<entry title="入口信息" ac="BasicSetting" do="entranceinfo"></entry>
-		</menu>
+		
 	</systemmenu>
 </manifest>

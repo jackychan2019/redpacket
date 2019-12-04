@@ -1,0 +1,140 @@
+{php include wl_template('common/header');}
+<ul class="nav nav-tabs" id="myTab">
+	<li class="active">
+		<a href="#">编辑任务</a>
+	</li>
+</ul>
+<div class="app-content">
+	<div class="app-form">
+		<form action="" method="post" class="form-horizontal form" id="form">
+			<div class="form-group-title">编辑任务</div>
+		
+			<div class="form-group">
+				<label class="col-sm-2 control-label">任务名称</label>
+				<div class="col-sm-9">
+					<input type="text" name="data[title]" id="title" class="form-control" value="{$data['title']}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">任务数量</label>
+				<div class="col-sm-9">
+					<input type="text" name="data[max_num]"  class="form-control" value="{$data['max_num']}" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">任务图片</label>
+				<div class="col-sm-9">
+					{php echo tpl_form_field_image('data[img]', $data['img']);}
+					<span class="help-block">任务图片，建议用小图片</span>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-2 control-label">任务类型</label>
+				<div class="col-sm-9">
+					<select name='data[type]'>
+						<option value="1" {if $data['type']==1} selected="selected" {/if}>推荐绑定手机会员数</option>
+						<option value="2" {if $data['type']==2} selected="selected" {/if}>推荐成为分销会员数</option>
+						<option value="3" {if $data['type']==3} selected="selected" {/if}>推荐开通一卡通会员数</option>
+						<option value="4" {if $data['type']==4} selected="selected" {/if}>个人交易笔数</option>
+						<option value="5" {if $data['type']==5} selected="selected" {/if}>个人结算佣金数</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-2 control-label">任务需要完成的数量</label>
+				<div class="col-sm-9">
+					<input type="text" name="data[complete_num]" id="title" class="form-control" value="{$data['complete_num']}" />
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-2 control-label">领取条件</label>
+				<div class="col-sm-9">
+					<select name='data[condition]'>
+						<option value="1" {if $data['condition']==1} selected="selected" {/if}>所有人</option>
+						<option value="2" {if $data['condition']==2} selected="selected" {/if}>分销商</option>
+						<option value="3" {if $data['condition']==3} selected="selected" {/if}>一卡通会员</option>
+					</select>
+				</div>
+			</div>
+			
+			
+	
+			
+			<div class="form-group">
+				<label class="col-sm-2 control-label">任务奖励类型</label>
+				<div class="col-sm-9">
+					<select name='data[reward_type]'>
+						<option value="1" {if $data['reward_type']==1} selected="selected" {/if}>积分</option>
+						<option value="2" {if $data['reward_type']==2} selected="selected" {/if}>余额</option>
+						<option value="3" {if $data['reward_type']==3} selected="selected" {/if}>平台优惠券</option>
+					</select>
+				</div>
+			</div>
+			
+			
+			<div class="form-group">
+				<label class="col-sm-2 control-label">任务奖励的数量</label>
+				<div class="col-sm-9">
+					<input type="text" name="data[reward_num]" id="title" class="form-control" value="{$data['reward_num']}" />
+				</div>
+			</div>
+			
+			
+		<div class="form-group">
+				<label class="col-sm-2 control-label">任务生效的开始日期</label>
+				<div class="col-sm-9">
+				 {if $data['begin']>0}	
+					{php echo tpl_form_field_date('data[begin]', date('Y-m-d H:i:s', $data['begin']),true);}
+				{else}				
+			     	{php echo tpl_form_field_date('data[begin]', date('Y-m-d H:i:s', time()),true);}
+				{/if}
+										<span class="help-block">任务生效日期</span>
+				</div>
+			</div>
+			
+			
+			
+		 <div class="form-group">
+				<label class="col-sm-2 control-label">任务截止日期</label>
+				<div class="col-sm-9">
+					{if $data['begin']>0}	
+					{php echo tpl_form_field_date('data[end]', date('Y-m-d H:i:s', $data['end']),true);}
+				{else}				
+			     	{php echo tpl_form_field_date('data[end]', date('Y-m-d H:i:s', time()),true);}
+				{/if}
+										<span class="help-block">任务截止日期</span>
+				</div>
+			</div>
+			
+			
+			
+			
+			<div class="form-group">
+				<label class="col-sm-2 control-label">任务是否互斥（完成之前不允许接其他任务）</label>
+				<div class="col-sm-9">
+					<div class="radio radio-success radio-inline">
+						<input type="radio" id="status1" name="data[single]" value="0" {if intval($data[ 'single'])==0 }checked="checked" {/if}>
+						<label for="inlineRadio1"> 否</label>
+					</div>
+					<div class="radio radio-success radio-inline">
+						<input type="radio" id="status2" name="data[single]" value="1" {if intval($data[ 'single'])==1 }checked="checked" {/if}>
+						<label for="inlineRadio1"> 是</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-2 control-label"></label>
+				<div class="col-sm-9">
+					<input type="submit" name="submit" value="提交" class="btn btn-primary min-width" />
+					<input type="hidden" name="token" value="{$_W['token']}" />
+					<input type="hidden" name="id" value="{$data['id']}" />
+					<input type="hidden" name="data[uniacid]" value="{$_W['uniacid']}" />
+				</div>
+			</div>
+		</from>
+	</div>
+</div>
+{php include wl_template('common/footer');}

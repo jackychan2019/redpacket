@@ -11,9 +11,9 @@ class Jkactive
 		global $_GPC;
 		$psize = 25;
 		$pindex = max(1, $_GPC['page']);
-		$data = Util::getNumData('*', PDO_NAME . 'pocket_slide', array('uniacid' => $uniacid, 'status' => 1), 'sort desc', $pindex, $psize);
-
-		if ($data) {
+		$data = Util::getNumData('*', PDO_NAME . 'jk_task', array('uniacid' => $uniacid, 'status' => 1), 'id desc', $pindex, $psize);
+   //    var_dump($data);exit;
+	/*	if ($data) {
 			foreach ($data[0] as $k => $v) {
 				if ($v['aid']) {
 					if ($v['aid'] != $_W['aid']) {
@@ -23,7 +23,9 @@ class Jkactive
 			}
 
 			return $data;
-		}
+		}*/
+		
+		return $data;
 	}
 
 	static public function saveFightOrder($data, $param = array())

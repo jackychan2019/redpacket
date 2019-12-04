@@ -7,8 +7,7 @@ class App
 		$styles = Util::traversingFiles(PATH_PLUGIN);    //读取文件夹
 		$pluginsset = array();
 		
-		var_dump($styles);echo "<br>";
-
+	
 		foreach ($styles as $key => $value) {
 			$config = self::ext_plugin_config($value);
 			if (!empty($config) && is_array($config)) {
@@ -46,7 +45,7 @@ class App
 		}
 
 		$pluginsset = Util::multi_array_sort($pluginsset, 'displayorder', SORT_DESC);
-		var_dump($pluginsset);exit;
+	//	var_dump($pluginsset);exit;
 		return $pluginsset;
 	}
 
@@ -130,7 +129,9 @@ class App
 		}
 
 		$manifest = self::ext_plugin_config_parse(file_get_contents($filename));
+	//	var_dump($manifest);exit;
 		if (empty($manifest['name']) || $manifest['ident'] != $plugin) {
+		//	var_dump($manifest);exit;
 			return array();
 		}
 
