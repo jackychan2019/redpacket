@@ -1,0 +1,43 @@
+﻿lwecai@163.com
+tsck123456
+
+wx502dee05057c7021
+3e15101ddc2acd9b3dd629d7902c9850
+
+
+http://122.114.215.171:8888/files
+ybdzw
+nana091014
+===============================
+https://ldb.vip55.shop
+admin
+admin
+
+CREATE TABLE `ldb_vip55_shop`.`ims_wlmerchant_jk_task`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` int(11) NOT NULL,
+   `complete_num` int(11) NOT NULL,
+  `begin` int(11) NULL,
+  `end` int(11) NOT NULL,
+  `max_num` int(11) NULL,
+  `get_num` int(11) NULL DEFAULT 1,
+  `condition` int(11) NULL,
+  `reward_type` int(11) NULL,
+  `reward_num` float(11, 2) NULL,
+  `single` int(11) NULL,
+  `status` int(11) NULL,
+  `addtime` int(11) NULL,
+   `updatetime` int(11) NULL,
+  PRIMARY KEY (`id`)
+);
+
+
+ALTER TABLE `ldb_vip55_shop`.`ims_wlmerchant_jk_task` 
+ADD COLUMN `title` varchar(2000) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `id`,
+ADD COLUMN `img` varchar(2000) NULL AFTER `title`;
+
+
+
+
+插件展示
+https://o2o.sctsck.com/web/index.php?c=site&a=entry&m=weliam_merchant&p=app&ac=plugins&do=index&
