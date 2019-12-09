@@ -69,6 +69,12 @@ class Task_WeliamController
 			//var_dump($data);exit;
 			
 		}
+
+
+		$conpons=pdo_getall('wlmerchant_couponlist',array('uniacid'=>$_W['uniacid'],'status'=>1));
+		foreach ($conpons as &$conpon){
+			$conpon['name']=$conpon['title'];
+		}
 		
 	
 		include wl_template('task/add');

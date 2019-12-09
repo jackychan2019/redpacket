@@ -66,7 +66,7 @@
 			<div class="form-group">
 				<label class="col-sm-2 control-label">任务奖励类型</label>
 				<div class="col-sm-9">
-					<select name='data[reward_type]'>
+					<select name='data[reward_type]' onchange="ifcoupon(this)">
 						<option value="1" {if $data['reward_type']==1} selected="selected" {/if}>积分</option>
 						<option value="2" {if $data['reward_type']==2} selected="selected" {/if}>余额</option>
 						<option value="3" {if $data['reward_type']==3} selected="selected" {/if}>平台优惠券</option>
@@ -81,7 +81,18 @@
 					<input type="text" name="data[reward_num]" id="title" class="form-control" value="{$data['reward_num']}" />
 				</div>
 			</div>
-			
+
+
+			<div class="form-group" style="display:none " id="coupon">
+				<label class="col-sm-2 control-label">请选择优惠卷</label>
+				<div class="col-sm-9">
+					<select name='data[couponid]'>
+						<?php foreach($coupons as $coupon) { ?>
+						<option value="1" {if $data['couponid']==$coupon['id']} selected="selected" {/if}>{$coupon['name']}</option>
+						<?php } ?>
+					</select>
+				</div>
+			</div>
 			
 		<div class="form-group">
 				<label class="col-sm-2 control-label">任务生效的开始日期</label>
@@ -138,3 +149,15 @@
 	</div>
 </div>
 {php include wl_template('common/footer');}
+<script>
+	function ifcoupon(t){
+        var vs = $(t).val();
+      //  alert(vs);
+		if(vs==3){
+		    $("#coupon").css('display','block');
+		}else{
+            $("#coupon").css('display','none');
+		}
+	}
+
+</script>
