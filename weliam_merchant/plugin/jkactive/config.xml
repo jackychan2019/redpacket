@@ -14,7 +14,11 @@
 		<system embed="true" />
 		<task embed="true" />
 	</setting>
-
+    <agentmenu>
+        <menu title="任务管理" font="fa-inbox">
+            <entry title="任务列表" ac="Task" do="lists" iscover="true"></entry>
+        </menu>
+    </agentmenu>
 	<systemmenu>
 		<menu title="任务管理" font="fa-inbox">
 			<entry title="任务列表" ac="Task" do="lists" iscover="true"></entry>		
